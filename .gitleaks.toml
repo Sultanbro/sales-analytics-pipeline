@@ -1,0 +1,20 @@
+title = "Credential checks"
+
+[extend]
+useDefault = true
+
+[[rules]]
+id = "telegram-bot-token-explicit"
+description = "Telegram bot credentials, including URLs and comments"
+regex = '''\b[0-9]{8,12}:[A-Za-z0-9_-]{35}\b'''
+
+[[rules]]
+id = "payment-provider-secret"
+description = "Payment provider secret keys"
+regex = '''\b(?:live|test)_[A-Za-z0-9_-]*[A-Z0-9][A-Za-z0-9_-]{20,}\b'''
+
+[[rules]]
+id = "getresponse-inline-key"
+description = "Embedded GetResponse API credentials"
+regex = '''(?i)getrespons(?:e)?(?:api)?[_-]?key\s*=\s*["']([A-Za-z0-9_-]{16,})["']'''
+secretGroup = 1

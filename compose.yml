@@ -1,0 +1,35 @@
+services:
+  api:
+    build: .
+    environment:
+      TENANT_KEYS_JSON: ${TENANT_KEYS_JSON:?Run python3 scripts/setup.py}
+      DATABASE_PATH: /app/data/jobs.db
+    ports:
+      - "127.0.0.1:8010:8010"
+    volumes:
+      - data:/app/data
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8010/health', timeout=2)"]
+      interval: 5s
+      timeout: 3s
+      start_period: 10s
+  worker:
+    build: .
+    command: [python, -m, pipeline.worker]
+    environment:
+      DATABASE_PATH: /app/data/jobs.db
+    volumes:
+      - data:/app/data
+    depends_on:
+      api:
+        condition: service_healthy
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+volumes:
+  data:

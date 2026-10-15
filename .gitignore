@@ -1,0 +1,11 @@
+.env
+.local/
+.venv/
+data/
+__pycache__/
+.pytest_cache/
+.ruff_cache/
+*.db*
+coverage*
+.DS_Store
+/bin/
